@@ -1,42 +1,35 @@
-''' Garbage collection is a periodic task which happens in python
- automatically we can manually trigger it to enhance python program processsing
- g0, g1, g2 whose periodic checking can be altered '''
+import requests
+from bs4 import BeautifulSoup
 
 
-import gc, sys
-import time
-
-gc.set_debug(True)
-# gc.set_threshold(20000,50,100)
-# gc.disable()
-# gc.enable()
-
-class Link:
-
-    def __init__(self, next_link, value:int):
-        self.next_link = next_link
-        self.value = value
-
-    def __repr__(self):
-        return self.value
+def horoscope(zodiac_sign: int, day: str) -> str:
+    url = (
+        "https://www.horoscope.com/us/horoscopes/general/"
+        f"horoscope-general-daily-{day}.aspx?sign={zodiac_sign}"
+    )
+    soup = BeautifulSoup(requests.get(url).content, "html.parser")
+    return soup.find("div", class_="main-horoscope").p.text
 
 
-l = Link(None, 'Main Link')
-
-mylist = []
-start = time.perf_counter()
-for i in range(5000):
-    l_temp = Link(l, 'L')
-    mylist.append(l_temp)
-
-end = time.perf_counter()
-print(end-start)
-
-''' I can manually collect garbage based upon generation 
-gc.collect(0)
-gc.collect(1)
-gc.collect(2)
-gc.disable()
-gc.enable()
-gc.collect()
-'''
+if __name__ == "__main__":
+    print("Daily Horoscope. \n")
+    print(
+        "enter your Zodiac sign number:\n",
+        "1. Aries\n",
+        "2. Taurus\n",
+        "3. Gemini\n",
+        "4. Cancer\n",
+        "5. Leo\n",
+        "6. Virgo\n",
+        "7. Libra\n",
+        "8. Scorpio\n",
+        "9. Sagittarius\n",
+        "10. Capricorn\n",
+        "11. Aquarius\n",
+        "12. Pisces\n",
+    )
+    zodiac_sign = int(input("number> ").strip())
+    print("choose some day:\n", "yesterday\n", "today\n", "tomorrow\n")
+    day = input("enter the day> ")
+    horoscope_text = horoscope(zodiac_sign, day)
+    print(horoscope_text)
